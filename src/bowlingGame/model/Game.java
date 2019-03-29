@@ -46,7 +46,7 @@ public class Game {
 		currFrame = getCurrentFrame();
 		prevFrame = frames.get(frameCount-1);
 		score += currFrame.getScore();
-		if(prevFrame.isStrike() && currFrame.isStrike()) {
+		if(prevFrame.isStrike()) {
 			//score += (prevFrame.getScore() + currFrame.getFirstTryScore() + currFrame.getSecondTryScore());
 			score = currFrame.getScore()*2;
 		}
