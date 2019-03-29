@@ -1,26 +1,27 @@
 package bowlingGame.model;
 
 public class Frame {
+	private static final int MAX_TRIES = 2;
 	private int[] scores;
 	private int pins;
 	private int tries;
 	//private boolean strike;
 
 	public Frame() {
-		this.scores = new int[2];
+		this.scores = new int[MAX_TRIES];
 		this.pins = 10;
 	}
 
 	public boolean isStrike() {
-		return pins == 0 && tries == 1;
+		return pins == 0 && tries == MAX_TRIES - 1;
 	}
 
 	public boolean isSpare() {
-		return pins == 0 && tries == 2;
+		return pins == 0 && tries == MAX_TRIES;
 	}
 
 	public boolean isFinished() {
-		return isStrike() || tries == 2;
+		return isStrike() || tries == MAX_TRIES;
 	}
 
 	public int getFirstTryScore() {
