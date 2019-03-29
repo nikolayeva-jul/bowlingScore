@@ -9,7 +9,7 @@ public class Game {
 	private static final int FRMAES = 10;
 	private static final int PINS = 10;
 	private List<Frame> frames;
-	private int frameCount;
+	private int frameIndex;
 	private int totalScore;
 
 	public Game() {
@@ -38,7 +38,7 @@ public class Game {
 		Frame currFrame;
 		Frame prevFrame;
 		Frame prePrevFrame;
-		if (frameCount == 0) {
+		if (frameIndex == 0) {
 			currFrame = getCurrentFrame();
 			score = currFrame.getScore();
 			totalScore += score;
@@ -49,7 +49,7 @@ public class Game {
 		score += currFrame.getScore();
 		if (prevFrame.isStrike()) {
 			//if consecutive strikes
-			if(frameCount >= 2) {
+			if(frameIndex >= 2) {
 				prePrevFrame = getPreReviousFrame();
 				if (prePrevFrame.isStrike()) {
 					score += prevFrame.getScore() + currFrame.getFirstTryScore();
@@ -82,13 +82,13 @@ public class Game {
 
 		if (frame.isFinished()) {
 			// add a bonus frame
-			if (frameCount == FRMAES - 1 && (frame.isStrike() || frame.isSpare())) {
+			if (frameIndex == FRMAES - 1 && (frame.isStrike() || frame.isSpare())) {
 				Frame bonusFrame = new Frame();
 				frames.add(bonusFrame);
-				frameCount++;
+				frameIndex++;
 				return bonusFrame;
 			}
-			frameCount++;
+			frameIndex++;
 			// check if it is a bonus frame
 			if (isBonusFrame()) {
 				return null;
@@ -99,14 +99,14 @@ public class Game {
 	}
 
 	private Frame getCurrentFrame() {
-		return frames.get(frameCount);
+		return frames.get(frameIndex);
 	}
 	
 	private Frame getPreviousFrame() {
-		return frames.get(frameCount-1);
+		return frames.get(frameIndex-1);
 	}
 	
 	private Frame getPreReviousFrame() {
-		return frames.get(frameCount-2);
+		return frames.get(frameIndex-2);
 	}
 }
