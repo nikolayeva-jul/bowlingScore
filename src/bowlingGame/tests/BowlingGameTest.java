@@ -158,5 +158,48 @@ public class BowlingGameTest {
 		assertEquals(123, game.score());
 	}
 	
+	@Test
+	public void testWholeGameTest() {
+		game.roll(1);
+		game.roll(2);
+		assertEquals(3, game.score());
+		
+		game.roll(10);
+		assertEquals(3, game.score());
+		
+		game.roll(8);
+		game.roll(1);
+		assertEquals(31, game.score());
+		
+		game.roll(6);
+		game.roll(4);
+		assertEquals(31, game.score());
+		
+		game.roll(10);
+		assertEquals(51, game.score());
+		
+		game.roll(10);
+		assertEquals(51, game.score());
+		
+		game.roll(8);
+		game.roll(1);
+		assertEquals(107, game.score());
+		
+		game.roll(5);
+		game.roll(5);
+		assertEquals(107, game.score());
+		
+		game.roll(10);
+		assertEquals(127, game.score());
+		
+		game.roll(10);
+		assertEquals(127, game.score());
+		
+		game.roll(10);
+		game.roll(7);
+		assertEquals(184, game.score());
+	}
+	
+	
 	
 }

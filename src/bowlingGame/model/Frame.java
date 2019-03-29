@@ -16,6 +16,10 @@ public class Frame {
 	public boolean isBonus() {
 		return bonus;
 	}
+	
+	public boolean isOpenFrame() {
+		return !isStrike() && !isSpare() && !isBonus();
+	}
 
 	public boolean isStrike() {
 		return pins == 0 && tries == MAX_TRIES - 1;

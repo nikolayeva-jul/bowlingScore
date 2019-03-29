@@ -35,25 +35,20 @@ public class Game {
 		Frame prevFrame;
 		Frame prePrevFrame;
 		if (frameIndex == 0) {
-			if (!currFrame.isStrike() && !currFrame.isSpare()) {
-				currFrame.updateFrameScore(currFrame.getScoreSum());
-				return currFrame.getFrameScore();
-			}
-			return 0;
+			return getFirstFrameScore();
 		}
 		prevFrame = getPreviousFrame();
+		if(currFrame.isBonus() && prevFrame.isStrike()) {
+			prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
+		}
 		if (prevFrame.isStrike()) {
-			if (currFrame.isBonus()) {
-				prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
-			}
 			if (frameIndex >= 2) {
 				prePrevFrame = getPreReviousFrame();
 				if (prePrevFrame.isStrike()) {
 					prePrevFrame.updateFrameScore(10 + prevFrame.getScoreSum() + currFrame.getFirstTryScore());
-					// prevFrame.updateFrameScore(10+currFrame.getScoreSum());
 				}
 			}
-			if (!currFrame.isStrike() && !currFrame.isBonus()) {
+			if (currFrame.isOpenFrame()) {
 				prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
 			}
 		}
@@ -61,14 +56,19 @@ public class Game {
 		if (prevFrame.isSpare()) {
 			prevFrame.updateFrameScore(10 + currFrame.getFirstTryScore());
 		}
-		if (!currFrame.isStrike() && !currFrame.isSpare() && !isBonusFrame()) {
+		if (currFrame.isOpenFrame()) {
 			currFrame.updateFrameScore(currFrame.getScoreSum());
 		}
 		return frames.stream().map(e -> e.getFrameScore()).reduce(0, (e1, e2) -> e1 + e2);
 	}
-
-	private boolean isBonusFrame() {
-		return frames.size() >= FRMAES + 1;
+	
+	private int getFirstFrameScore() {
+		Frame currFrame = frames.get(0);
+		if (!currFrame.isStrike() && !currFrame.isSpare()) {
+			currFrame.updateFrameScore(currFrame.getScoreSum());
+			return currFrame.getFrameScore();
+		}
+		return 0;
 	}
 
 	private Frame getFrame() {
@@ -85,7 +85,7 @@ public class Game {
 			}
 			frameIndex++;
 			// check if it is a bonus frame
-			if (isBonusFrame()) {
+			if (frame.isBonus()) {
 				return null;
 			}
 			frame = getCurrentFrame();
