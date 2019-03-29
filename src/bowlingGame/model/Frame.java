@@ -5,11 +5,16 @@ public class Frame {
 	private int[] scores;
 	private int pins;
 	private int tries;
-	//private boolean strike;
+	private int frameScore;
+	private boolean bonus;
 
 	public Frame() {
 		this.scores = new int[MAX_TRIES];
 		this.pins = 10;
+	}
+	
+	public boolean isBonus() {
+		return bonus;
 	}
 
 	public boolean isStrike() {
@@ -21,6 +26,9 @@ public class Frame {
 	}
 
 	public boolean isFinished() {
+		if(bonus) {
+			return tries == MAX_TRIES;
+		}
 		return isStrike() || tries == MAX_TRIES;
 	}
 
@@ -37,7 +45,19 @@ public class Frame {
 		pins -= score;
 	}
 	
-	public int getScore() {
+	public int getScoreSum() {
 		return scores[0] + scores[1];
+	}
+	public int getFrameScore() {
+		return frameScore;
+	}
+	
+	public void updateFrameScore(int score) {
+		frameScore+=score;
+	}
+
+	public void setBonus() {
+		bonus=true;
+		
 	}
 }

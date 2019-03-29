@@ -10,7 +10,6 @@ public class Game {
 	private static final int PINS = 10;
 	private List<Frame> frames;
 	private int frameIndex;
-	private int totalScore;
 
 	public Game() {
 		this.frames = new ArrayList<>(FRMAES);
@@ -29,52 +28,47 @@ public class Game {
 			throw new BowlingGameException("The game is over. Start new game.");
 		}
 		frame.setScore(pins);
-		// FIXME if it is bonus frame and previous was spare should we limit to one try
-		// only?
 	}
 
 	public int score() {
-		int score = 0;
-		Frame currFrame;
+		Frame currFrame = getCurrentFrame();
 		Frame prevFrame;
 		Frame prePrevFrame;
 		if (frameIndex == 0) {
-			currFrame = getCurrentFrame();
-			score = currFrame.getScore();
-			totalScore += score;
-			return totalScore;
+			if (!currFrame.isStrike() && !currFrame.isSpare()) {
+				currFrame.updateFrameScore(currFrame.getScoreSum());
+				return currFrame.getFrameScore();
+			}
+			return 0;
 		}
-		currFrame = getCurrentFrame();
 		prevFrame = getPreviousFrame();
-		score += currFrame.getScore();
 		if (prevFrame.isStrike()) {
-			//if consecutive strikes
-			if(frameIndex >= 2) {
+			if (currFrame.isBonus()) {
+				prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
+			}
+			if (frameIndex >= 2) {
 				prePrevFrame = getPreReviousFrame();
 				if (prePrevFrame.isStrike()) {
-					score += prevFrame.getScore() + currFrame.getFirstTryScore();
-					totalScore += score;
-					return totalScore;
+					prePrevFrame.updateFrameScore(10 + prevFrame.getScoreSum() + currFrame.getFirstTryScore());
+					// prevFrame.updateFrameScore(10+currFrame.getScoreSum());
 				}
 			}
-			
-			// score += (prevFrame.getScore() + currFrame.getFirstTryScore() +
-			// currFrame.getSecondTryScore());
-			score = currFrame.getScore() * 2;
+			if (!currFrame.isStrike() && !currFrame.isBonus()) {
+				prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
+			}
 		}
-		if (prevFrame.isSpare() && !isBonusFrame()) {
-			// score += (prevFrame.getScore() + currFrame.getFirstTryScore());
-			score = currFrame.getFirstTryScore() * 2 + currFrame.getSecondTryScore();
+		
+		if (prevFrame.isSpare()) {
+			prevFrame.updateFrameScore(10 + currFrame.getFirstTryScore());
 		}
-		if (isBonusFrame()) {
-			score = currFrame.getScore();
+		if (!currFrame.isStrike() && !currFrame.isSpare() && !isBonusFrame()) {
+			currFrame.updateFrameScore(currFrame.getScoreSum());
 		}
-		totalScore += score;
-		return totalScore;
+		return frames.stream().map(e -> e.getFrameScore()).reduce(0, (e1, e2) -> e1 + e2);
 	}
 
 	private boolean isBonusFrame() {
-		return frames.size() == FRMAES + 1;
+		return frames.size() >= FRMAES + 1;
 	}
 
 	private Frame getFrame() {
@@ -82,8 +76,9 @@ public class Game {
 
 		if (frame.isFinished()) {
 			// add a bonus frame
-			if (frameIndex == FRMAES - 1 && (frame.isStrike() || frame.isSpare())) {
+			if (frameIndex >= FRMAES - 1 && (frame.isStrike() || frame.isSpare())) {
 				Frame bonusFrame = new Frame();
+				bonusFrame.setBonus();
 				frames.add(bonusFrame);
 				frameIndex++;
 				return bonusFrame;
@@ -101,12 +96,12 @@ public class Game {
 	private Frame getCurrentFrame() {
 		return frames.get(frameIndex);
 	}
-	
+
 	private Frame getPreviousFrame() {
-		return frames.get(frameIndex-1);
+		return frames.get(frameIndex - 1);
 	}
-	
+
 	private Frame getPreReviousFrame() {
-		return frames.get(frameIndex-2);
+		return frames.get(frameIndex - 2);
 	}
 }

@@ -31,7 +31,7 @@ public class BowlingGameTest {
 	public void testSpareScore() {
 		game.roll(2);
 		game.roll(8);
-		assertEquals(10, game.score());
+		assertEquals(0, game.score());
 
 		game.roll(4);
 		game.roll(3);
@@ -41,7 +41,7 @@ public class BowlingGameTest {
 	@Test
 	public void testStrikeInFirstFrame() {
 		game.roll(10);
-		assertEquals(10, game.score());
+		assertEquals(0, game.score());
 
 		game.roll(3);
 		game.roll(6);
@@ -55,7 +55,7 @@ public class BowlingGameTest {
 		assertEquals(4, game.score());
 
 		game.roll(10);
-		assertEquals(14, game.score());
+		assertEquals(4, game.score());
 
 		game.roll(6);
 		game.roll(2);
@@ -65,30 +65,30 @@ public class BowlingGameTest {
 	@Test
 	public void test2ConsequtiveStrikes() {
 		game.roll(10);
-		assertEquals(10, game.score());
+		assertEquals(0, game.score());
 
 		game.roll(10);
-		assertEquals(30, game.score());
+		assertEquals(0, game.score());
 
 		game.roll(3);
-		game.roll(7);
-		assertEquals(53, game.score());
+		game.roll(6);
+		assertEquals(51, game.score());
 	}
 
 	@Test
 	public void test3ConsecutiveStrikes() {
 		game.roll(10);
-		assertEquals(10, game.score());
+		assertEquals(0, game.score());
+
+		game.roll(10);
+		assertEquals(0, game.score());
 
 		game.roll(10);
 		assertEquals(30, game.score());
 
-		game.roll(10);
-		assertEquals(60, game.score());
-
 		game.roll(3);
-		game.roll(7);
-		assertEquals(83, game.score());
+		game.roll(6);
+		assertEquals(81, game.score());
 	}
 
 	@Test
@@ -98,7 +98,8 @@ public class BowlingGameTest {
 			game.roll(10);
 			score = game.score();
 		}
-		assertEquals(270,score);
+		assertEquals(240,score);
+		game.roll(10);
 		game.roll(10);
 		assertEquals(300, game.score());
 	}
@@ -122,7 +123,7 @@ public class BowlingGameTest {
 			game.roll(5);
 			score = game.score();
 		}
-		assertEquals(145, score);
+		assertEquals(135, score);
 		game.roll(5);
 		assertEquals(150, game.score());
 	}
@@ -138,7 +139,7 @@ public class BowlingGameTest {
 		assertEquals(72, score);
 		
 		game.roll(10);
-		assertEquals(82, game.score());
+		assertEquals(72, game.score());
 		
 		game.roll(6);
 		game.roll(3);
