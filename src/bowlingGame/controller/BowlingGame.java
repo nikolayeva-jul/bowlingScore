@@ -1,20 +1,26 @@
 package bowlingGame.controller;
 
+import java.util.Random;
+
 import bowlingGame.model.Game;
 
 public class BowlingGame {
 	public static void main(String[] args) {
 		Game game1 = new Game();
-		game1.roll(1);
-		game1.roll(4);
-		System.out.println(game1.score());
+		Random rnd = new Random();
 		
-		game1.roll(4);
-		game1.roll(5);
-		System.out.println(game1.score());
-		
-		game1.roll(6);
-		game1.roll(4);
-		System.out.println(game1.score());
+		for(int i = 0; i < 10; i++) {
+			int pins = rnd.nextInt(11);
+			game1.roll(pins);
+			if(pins == 10) {
+				System.out.println(pins);
+				System.out.println(game1.score());
+				continue;
+			}
+			int pins2 = rnd.nextInt(11-pins);
+			game1.roll(pins2);
+			System.out.println(pins + ": " + pins2);
+			System.out.println(game1.score());
+		}
 	}
 }

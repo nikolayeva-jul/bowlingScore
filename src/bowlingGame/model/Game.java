@@ -6,14 +6,14 @@ import java.util.List;
 import bowlingGame.exceptions.BowlingGameException;
 
 public class Game {
-	private static final int FRMAES = 10;
+	private static final int FRAMES = 10;
 	private static final int PINS = 10;
 	private List<Frame> frames;
 	private int frameIndex;
 
 	public Game() {
-		this.frames = new ArrayList<>(FRMAES);
-		for (int i = 0; i < FRMAES; i++) {
+		this.frames = new ArrayList<>(FRAMES);
+		for (int i = 0; i < FRAMES; i++) {
 			frames.add(new Frame());
 		}
 	}
@@ -59,7 +59,7 @@ public class Game {
 		if (currFrame.isOpenFrame()) {
 			currFrame.updateFrameScore(currFrame.getScoreSum());
 		}
-		return frames.stream().map(e -> e.getFrameScore()).reduce(0, (e1, e2) -> e1 + e2);
+		return frames.stream().mapToInt(e -> e.getFrameScore()).sum();
 	}
 	
 	private int getFirstFrameScore() {
@@ -76,7 +76,7 @@ public class Game {
 
 		if (frame.isFinished()) {
 			// add a bonus frame
-			if (frameIndex >= FRMAES - 1 && (frame.isStrike() || frame.isSpare())) {
+			if (frameIndex >= FRAMES - 1 && (frame.isStrike() || frame.isSpare())) {
 				Frame bonusFrame = new Frame();
 				bonusFrame.setBonus();
 				frames.add(bonusFrame);
