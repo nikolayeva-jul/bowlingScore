@@ -60,20 +60,7 @@ public class Game implements AbstractGame{
 		return frames.stream().mapToInt(e -> e.getFrameScore()).sum();
 	}
 
-	/*
-	 * private void computeStrikeScore(Frame frame) { int i = frames.indexOf(frame);
-	 * int stop = frameIndex-2; Frame currFrame = frame; int score =
-	 * currFrame.getFirstTryScore(); int score2 = currFrame.getScoreSum(); Frame
-	 * prevFrame; if(i >= 2 && i-2>=stop) { currFrame = frames.get(i - 1); prevFrame
-	 * = frames.get(i - 2); if (prevFrame.isStrike()) {
-	 * computeStrikeScore(currFrame); } else {
-	 * currFrame.updateFrameScore(10+score2); return; }
-	 * prevFrame.updateFrameScore(10+currFrame.getFirstTryScore()+score); }
-	 * 
-	 * 
-	 * }
-	 */
-
+	
 	private int getFirstFrameScore() {
 		Frame currFrame = frames.get(0);
 		if (!currFrame.isStrike() && !currFrame.isSpare()) {
