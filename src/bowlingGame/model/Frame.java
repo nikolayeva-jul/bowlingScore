@@ -49,9 +49,10 @@ public class Frame {
 		pins -= score;
 	}
 	
-	public int getScoreSum() {
+	public int getScoresSum() {
 		return scores[0] + scores[1];
 	}
+	
 	public int getFrameScore() {
 		return frameScore;
 	}
@@ -62,6 +63,5 @@ public class Frame {
 
 	public void setBonus() {
 		bonus=true;
-		
 	}
 }

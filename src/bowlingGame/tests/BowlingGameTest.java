@@ -1,19 +1,22 @@
 package bowlingGame.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import bowlingGame.model.Game;
+import bowlingGame.exceptions.BowlingGameException;
+import bowlingGame.model.AbstractGame;
+import bowlingGame.model.BowlingGameFactory;
 
 public class BowlingGameTest {
 
-	Game game;
-
+	BowlingGameFactory newMatch = new BowlingGameFactory();
+	AbstractGame game;
+	
 	@Before
 	public void setUp() throws Exception {
-		game = new Game();
+		game = newMatch.start();
 	}
 
 	@Test
@@ -102,6 +105,21 @@ public class BowlingGameTest {
 		game.roll(10);
 		game.roll(10);
 		assertEquals(300, game.score());
+	}
+	
+	@Test(expected=BowlingGameException.class)
+	public void testThrownException() {
+		int score = 0;
+		for (int i = 0; i < 10; i++) {
+			game.roll(10);
+			score = game.score();
+		}
+		assertEquals(240,score);
+		game.roll(10);
+		game.roll(10);
+		game.roll(10);
+		assertEquals(300, game.score());
+		
 	}
 	
 	@Test

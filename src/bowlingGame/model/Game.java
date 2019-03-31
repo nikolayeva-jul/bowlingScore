@@ -5,7 +5,7 @@ import java.util.List;
 
 import bowlingGame.exceptions.BowlingGameException;
 
-public class Game {
+public class Game implements AbstractGame{
 	private static final int FRAMES = 10;
 	private static final int PINS = 10;
 	private List<Frame> frames;
@@ -23,7 +23,6 @@ public class Game {
 			throw new BowlingGameException("Wrong number of pins: " + pins + ". Max pins " + PINS);
 		}
 		Frame frame = getFrame();
-
 		if (frame == null) {
 			throw new BowlingGameException("The game is over. Start new game.");
 		}
@@ -37,35 +36,48 @@ public class Game {
 		if (frameIndex == 0) {
 			return getFirstFrameScore();
 		}
+		if (currFrame.isOpenFrame()) {
+			currFrame.updateFrameScore(currFrame.getScoresSum());
+		}
 		prevFrame = getPreviousFrame();
-		if(currFrame.isBonus() && prevFrame.isStrike()) {
-			prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
+		if (currFrame.isBonus() && prevFrame.isStrike()) {
+			prevFrame.updateFrameScore(10 + currFrame.getScoresSum());
 		}
-		if (prevFrame.isStrike()) {
-			if (frameIndex >= 2) {
-				prePrevFrame = getPreReviousFrame();
-				if (prePrevFrame.isStrike()) {
-					prePrevFrame.updateFrameScore(10 + prevFrame.getScoreSum() + currFrame.getFirstTryScore());
-				}
-			}
-			if (currFrame.isOpenFrame()) {
-				prevFrame.updateFrameScore(10 + currFrame.getScoreSum());
-			}
-		}
-		
 		if (prevFrame.isSpare()) {
 			prevFrame.updateFrameScore(10 + currFrame.getFirstTryScore());
 		}
-		if (currFrame.isOpenFrame()) {
-			currFrame.updateFrameScore(currFrame.getScoreSum());
+		if (prevFrame.isStrike()) {
+			if (frameIndex >= 2) {
+				prePrevFrame = getPrePreviousFrame();
+				if (prePrevFrame.isStrike()) {
+					prePrevFrame.updateFrameScore(10 + prevFrame.getScoresSum() + currFrame.getFirstTryScore());
+				}
+			}
+			if (currFrame.isOpenFrame()) {
+				prevFrame.updateFrameScore(10 + currFrame.getScoresSum());
+			}
 		}
 		return frames.stream().mapToInt(e -> e.getFrameScore()).sum();
 	}
-	
+
+	/*
+	 * private void computeStrikeScore(Frame frame) { int i = frames.indexOf(frame);
+	 * int stop = frameIndex-2; Frame currFrame = frame; int score =
+	 * currFrame.getFirstTryScore(); int score2 = currFrame.getScoreSum(); Frame
+	 * prevFrame; if(i >= 2 && i-2>=stop) { currFrame = frames.get(i - 1); prevFrame
+	 * = frames.get(i - 2); if (prevFrame.isStrike()) {
+	 * computeStrikeScore(currFrame); } else {
+	 * currFrame.updateFrameScore(10+score2); return; }
+	 * prevFrame.updateFrameScore(10+currFrame.getFirstTryScore()+score); }
+	 * 
+	 * 
+	 * }
+	 */
+
 	private int getFirstFrameScore() {
 		Frame currFrame = frames.get(0);
 		if (!currFrame.isStrike() && !currFrame.isSpare()) {
-			currFrame.updateFrameScore(currFrame.getScoreSum());
+			currFrame.updateFrameScore(currFrame.getScoresSum());
 			return currFrame.getFrameScore();
 		}
 		return 0;
@@ -73,9 +85,8 @@ public class Game {
 
 	private Frame getFrame() {
 		Frame frame = getCurrentFrame();
-
 		if (frame.isFinished()) {
-			// add a bonus frame
+			//add a bonus frame
 			if (frameIndex >= FRAMES - 1 && (frame.isStrike() || frame.isSpare())) {
 				Frame bonusFrame = new Frame();
 				bonusFrame.setBonus();
@@ -84,7 +95,7 @@ public class Game {
 				return bonusFrame;
 			}
 			frameIndex++;
-			// check if it is a bonus frame
+			//check if it was a bonus frame
 			if (frame.isBonus()) {
 				return null;
 			}
@@ -101,7 +112,7 @@ public class Game {
 		return frames.get(frameIndex - 1);
 	}
 
-	private Frame getPreReviousFrame() {
+	private Frame getPrePreviousFrame() {
 		return frames.get(frameIndex - 2);
 	}
 }
